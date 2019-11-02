@@ -1,4 +1,4 @@
-﻿#  SecKit SK-Go / SK-Mini 3D Printer Firmware
+﻿#  SecKit 3D Printer Firmware
 
 This repo is cloned from [Marlin Firmware](https://github.com/marlinfirmware/marlin) branch bugfix-2.0.x, commit ad28da7eb4fe720776daf929d0a25ba39e6b6ca8 [ad28da7eb]
 
