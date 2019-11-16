@@ -290,6 +290,9 @@
 // before setting a PWM value. (Does not work with software PWM for fan on Sanguinololu)
 //#define FAN_KICKSTART_TIME 100
 
+// Some coolers may require a non-zero "off" state.
+//#define FAN_OFF_PWM  1
+
 /**
  * PWM Fan Scaling
  *
@@ -908,7 +911,10 @@
 #if HAS_GRAPHICAL_LCD && HAS_PRINT_PROGRESS
   //#define PRINT_PROGRESS_SHOW_DECIMALS // Show progress with decimal digits
   //#define SHOW_REMAINING_TIME          // Display estimated time to completion
-  //#define ROTATE_PROGRESS_DISPLAY      // Display (P)rogress, (E)lapsed, and (R)emaining time
+  #if ENABLED(SHOW_REMAINING_TIME)
+    //#define USE_M73_REMAINING_TIME     // Use remaining time from M73 command instead of estimation
+    //#define ROTATE_PROGRESS_DISPLAY    // Display (P)rogress, (E)lapsed, and (R)emaining time
+  #endif
 #endif
 
 #if HAS_CHARACTER_LCD && HAS_PRINT_PROGRESS
@@ -1266,6 +1272,9 @@
 
   // Output extra debug info for Touch UI events
   //#define TOUCH_UI_DEBUG
+
+  // Developer menu (accessed by touching "About Printer" copyright text)
+  //#define TOUCH_UI_DEVELOPER_MENU
 #endif
 
 //
@@ -1832,102 +1841,105 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #ifdef BOWDEN_EXTRUSION
-    #define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #else
-    #define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #endif
-    #define X_MICROSTEPS   USTEPS  // 0..256
-    #define X_RSENSE     0.11
-    #define X_CHAIN_POS    -1  // <=0 : Not chained. 1 : MCU MOSI connected. 2 : Next in chain, ...
+    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
+    #define X_MICROSTEPS     SK_USTEPS    // 0..256
+    #define X_RSENSE          0.11
+    #define X_CHAIN_POS      -1    // <=0 : Not chained. 1 : MCU MOSI connected. 2 : Next in chain, ...
   #endif
 
   #if AXIS_IS_TMC(X2)
-    #define X2_CURRENT    800
-    #define X2_MICROSTEPS  16
-    #define X2_RSENSE    0.11
-    #define X2_CHAIN_POS   -1
+    #define X2_CURRENT      800
+    #define X2_CURRENT_HOME X2_CURRENT
+    #define X2_MICROSTEPS    16
+    #define X2_RSENSE         0.11
+    #define X2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #ifdef BOWDEN_EXTRUSION
-    #define Y_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #else
-    #define Y_CURRENT     800
-    #endif
-    #define Y_MICROSTEPS   USTEPS
-    #define Y_RSENSE     0.11
-    #define Y_CHAIN_POS    -1
+    #define Y_CURRENT       800
+    #define Y_CURRENT_HOME  Y_CURRENT
+    #define Y_MICROSTEPS     SK_USTEPS
+    #define Y_RSENSE          0.11
+    #define Y_CHAIN_POS      -1
   #endif
 
   #if AXIS_IS_TMC(Y2)
-    #define Y2_CURRENT    800
-    #define Y2_MICROSTEPS  16
-    #define Y2_RSENSE    0.11
-    #define Y2_CHAIN_POS   -1
+    #define Y2_CURRENT      800
+    #define Y2_CURRENT_HOME Y2_CURRENT
+    #define Y2_MICROSTEPS    16
+    #define Y2_RSENSE         0.11
+    #define Y2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     600
-    #define Z_MICROSTEPS   USTEPS
-    #define Z_RSENSE     0.11
-    #define Z_CHAIN_POS    -1
+    #if SK_Z_BELT_EXP
+      #define Z_CURRENT     800
+    #else
+      #define Z_CURRENT     600
+    #endif
+    #define Z_CURRENT_HOME  Z_CURRENT
+    #define Z_MICROSTEPS     SK_USTEPS
+    #define Z_RSENSE          0.11
+    #define Z_CHAIN_POS      -1
   #endif
 
   #if AXIS_IS_TMC(Z2)
-    #define Z2_CURRENT    800
-    #define Z2_MICROSTEPS  16
-    #define Z2_RSENSE    0.11
-    #define Z2_CHAIN_POS   -1
+    #define Z2_CURRENT      800
+    #define Z2_CURRENT_HOME Z2_CURRENT
+    #define Z2_MICROSTEPS    16
+    #define Z2_RSENSE         0.11
+    #define Z2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Z3)
-    #define Z3_CURRENT    800
-    #define Z3_MICROSTEPS  16
-    #define Z3_RSENSE    0.11
-    #define Z3_CHAIN_POS   -1
+    #define Z3_CURRENT      800
+    #define Z3_CURRENT_HOME Z3_CURRENT
+    #define Z3_MICROSTEPS    16
+    #define Z3_RSENSE         0.11
+    #define Z3_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT    550
-    #define E0_MICROSTEPS  USTEPS
-    #define E0_RSENSE    0.11
-    #define E0_CHAIN_POS   -1
+    #define E0_CURRENT      550
+    #define E0_MICROSTEPS    SK_USTEPS
+    #define E0_RSENSE         0.11
+    #define E0_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT    800
-    #define E1_MICROSTEPS  16
-    #define E1_RSENSE    0.11
-    #define E1_CHAIN_POS   -1
+    #define E1_CURRENT      800
+    #define E1_MICROSTEPS    16
+    #define E1_RSENSE         0.11
+    #define E1_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E2)
-    #define E2_CURRENT    800
-    #define E2_MICROSTEPS  16
-    #define E2_RSENSE    0.11
-    #define E2_CHAIN_POS   -1
+    #define E2_CURRENT      800
+    #define E2_MICROSTEPS    16
+    #define E2_RSENSE         0.11
+    #define E2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E3)
-    #define E3_CURRENT    800
-    #define E3_MICROSTEPS  16
-    #define E3_RSENSE    0.11
-    #define E3_CHAIN_POS   -1
+    #define E3_CURRENT      800
+    #define E3_MICROSTEPS    16
+    #define E3_RSENSE         0.11
+    #define E3_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E4)
-    #define E4_CURRENT    800
-    #define E4_MICROSTEPS  16
-    #define E4_RSENSE    0.11
-    #define E4_CHAIN_POS   -1
+    #define E4_CURRENT      800
+    #define E4_MICROSTEPS    16
+    #define E4_RSENSE         0.11
+    #define E4_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E5)
-    #define E5_CURRENT    800
-    #define E5_MICROSTEPS  16
-    #define E5_RSENSE    0.11
-    #define E5_CHAIN_POS   -1
+    #define E5_CURRENT      800
+    #define E5_MICROSTEPS    16
+    #define E5_RSENSE         0.11
+    #define E5_CHAIN_POS     -1
   #endif
 
   /**
@@ -1953,13 +1965,10 @@
    * The default SW SPI pins are defined the respective pins files,
    * but you can override or define them here.
    */
-  #if (DRIVER_CHIP == TMC2130)
   #define TMC_USE_SW_SPI
   //#define TMC_SW_MOSI       -1
   //#define TMC_SW_MISO       -1
   //#define TMC_SW_SCK        -1
-  #elif (DRIVER_CHIP == TMC2209)
-  #endif
 
   /**
    * Four TMC2209 drivers can use the same HW/SW serial port with hardware configured addresses.
@@ -2048,25 +2057,19 @@
    */
   #define HYBRID_THRESHOLD
 
-#ifdef BOWDEN_EXTRUSION
-  #define X_HYBRID_THRESHOLD     120  // [mm/s]
-  #define Y_HYBRID_THRESHOLD     120
-#else
-  #define X_HYBRID_THRESHOLD     120  // [mm/s]
-  #define Y_HYBRID_THRESHOLD     120
-#endif
-
-  #define X2_HYBRID_THRESHOLD    100
-  #define Y2_HYBRID_THRESHOLD    100
+  #define X_HYBRID_THRESHOLD     100  // [mm/s]
+  #define X2_HYBRID_THRESHOLD    120
+  #define Y_HYBRID_THRESHOLD     100
+  #define Y2_HYBRID_THRESHOLD    120
   #define Z_HYBRID_THRESHOLD      30
-  #define Z2_HYBRID_THRESHOLD     30
-  #define Z3_HYBRID_THRESHOLD     30
-  #define E0_HYBRID_THRESHOLD     0   // 0 for disable stealthChop
-  #define E1_HYBRID_THRESHOLD     40
-  #define E2_HYBRID_THRESHOLD     40
-  #define E3_HYBRID_THRESHOLD     40
-  #define E4_HYBRID_THRESHOLD     40
-  #define E5_HYBRID_THRESHOLD     40
+  #define Z2_HYBRID_THRESHOLD      3
+  #define Z3_HYBRID_THRESHOLD      3
+  #define E0_HYBRID_THRESHOLD      0   // 0 for disable stealthChop
+  #define E1_HYBRID_THRESHOLD     30
+  #define E2_HYBRID_THRESHOLD     30
+  #define E3_HYBRID_THRESHOLD     30
+  #define E4_HYBRID_THRESHOLD     30
+  #define E5_HYBRID_THRESHOLD     30
 
   /**
    * Use StallGuard2 to home / probe X, Y, Z.
@@ -2093,7 +2096,7 @@
    *
    * TMC2209 requires STEALTHCHOP enabled for SENSORLESS_HOMING
    */
-  #define SENSORLESS_HOMING // TMC2130 only
+   #define SENSORLESS_HOMING // StallGuard capable drivers only
 
   /**
    * Use StallGuard2 to probe the bed with the nozzle.
@@ -2105,25 +2108,17 @@
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
     // TMC2209: 0...255. TMC2130: -64...63
-    #if (DRIVER_CHIP == TMC2209)
-      #ifdef BOWDEN_EXTRUSION
-        #define X_STALL_SENSITIVITY  160
-        #define Y_STALL_SENSITIVITY  160
-      #else
-        #define X_STALL_SENSITIVITY  160
-        #define Y_STALL_SENSITIVITY  160
-      #endif
-    #elif (DRIVER_CHIP == TMC2130)
-      #ifdef BOWDEN_EXTRUSION
-        #define X_STALL_SENSITIVITY  -1
-        #define Y_STALL_SENSITIVITY  -1
-      #else
-        #define X_STALL_SENSITIVITY  0
-        #define Y_STALL_SENSITIVITY  0
-      #endif
+    #ifdef BOWDEN_EXTRUSION
+      #define X_STALL_SENSITIVITY  -1
+      #define Y_STALL_SENSITIVITY  -1
+    #else
+      #define X_STALL_SENSITIVITY  0
+      #define Y_STALL_SENSITIVITY  0
     #endif
+    #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
     //#define Z_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130 only
+    //#define HOME_USING_SPREADCYCLE
     //#define IMPROVE_HOMING_RELIABILITY
   #endif
 
@@ -2146,8 +2141,8 @@
    *
    * Example:
    * #define TMC_ADV() { \
-   *   stepperX.diag0_temp_prewarn(1); \
-   *   stepperY.interpolate(0); \
+   *   stepperX.diag0_otpw(1); \
+   *   stepperY.intpol(0); \
    * }
    */
   #define TMC_ADV() {  }

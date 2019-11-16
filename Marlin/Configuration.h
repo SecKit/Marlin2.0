@@ -24,9 +24,8 @@
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
 //----------------------------------------------------------
-#define DRIVER_CHIP       TMC2209   // TMC2130, TMC2209, ...
 
-#define USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
+#define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
 #define SK_MINI_USING_BMG     0
 #define SK_MINI_USING_TITAN   1
@@ -35,9 +34,13 @@
 
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_TITAN
+#define SK_Z_HEIGHT           300     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
+
+#define SK_REVERSE_CABLE_SEQUENCE  false
+#define SK_Z_BELT_EXP              false
 
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
@@ -158,8 +161,7 @@
   #define MOTHERBOARD BOARD_BIGTREE_SKR_V1_3
 #endif
 
-// Optional custom name for your RepStrap or other custom machine
-// Displayed in the LCD "Ready" message
+// Name displayed in the LCD "Ready" message and Info menu
 #if (SK_MODEL <= SK_MINI_USING_TITAN)
   #define CUSTOM_MACHINE_NAME "SK-Mini"
 #else
@@ -666,7 +668,8 @@
 //#define USE_YMAX_PLUG
 //#define USE_ZMAX_PLUG
 
-
+// Enable pullup for all endstops to prevent a floating state
+#define ENDSTOPPULLUPS
 #if DISABLED(ENDSTOPPULLUPS)
   // Disable ENDSTOPPULLUPS to set pullups individually
   //#define ENDSTOPPULLUP_XMAX
@@ -676,13 +679,6 @@
   //#define ENDSTOPPULLUP_YMIN
   //#define ENDSTOPPULLUP_ZMIN
   //#define ENDSTOPPULLUP_ZMIN_PROBE
-#endif
-
-#if (DRIVER_CHIP == TMC2209)
-  #define ENDSTOPPULLUP_XMIN
-  #define ENDSTOPPULLUP_YMIN
-#else
-  #define ENDSTOPPULLUPS
 #endif
 
 // Enable pulldown for all endstops to prevent a floating state
@@ -699,13 +695,8 @@
 #endif
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
-#if (DRIVER_CHIP == TMC2209)
-#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#elif (DRIVER_CHIP == TMC2130)
 #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#endif
 
 #define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -728,14 +719,14 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#define X_DRIVER_TYPE  DRIVER_CHIP
-#define Y_DRIVER_TYPE  DRIVER_CHIP
-#define Z_DRIVER_TYPE  DRIVER_CHIP
+#define X_DRIVER_TYPE  TMC2130
+#define Y_DRIVER_TYPE  TMC2130
+#define Z_DRIVER_TYPE  TMC2130
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE DRIVER_CHIP
+#define E0_DRIVER_TYPE TMC2130
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -783,23 +774,26 @@
 /**
  * Default Axis Steps Per Unit (steps/mm)
  * Override with M92
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
+ *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100, 100, 500, 413 }  // Bontech recommends 413 for BMG extruder @ 1.8 degree stepper, 16 microsteps
 
 
-#if (USTEPS == 8)
+#if (SK_USTEPS == 8)
 
   #define STEPS_X 50
   #define STEPS_Y 50
   #define STEPS_Z 200
 
-#elif (USTEPS == 16)
+#elif (SK_USTEPS == 16)
 
   #define STEPS_X 100
   #define STEPS_Y 100
-  #define STEPS_Z 400
-
+  #if SK_Z_BELT_EXP
+    #define STEPS_Z 2000
+  #else
+    #define STEPS_Z 400
+  #endif
 #endif
 
 
@@ -808,9 +802,9 @@
   // Bontech recommends 413 for BMG extruder @ 1.8 degree stepper, 16 microsteps
   // 413 / 2 * 0.95 = 196.2  (2 is for 8 microsteps, 0.9 to reduce extrusion)
 
-  #if (USTEPS == 8)
+  #if (SK_USTEPS == 8)
     #define STEPS_E 196.2
-  #elif (USTEPS == 16)
+  #elif (SK_USTEPS == 16)
     #define STEPS_E 392.4
   #endif
 
@@ -819,9 +813,9 @@
   // E3D recommend 418.5 for 16 microsteps
   // 418.5 / 2 * .9 = 188.3
 
-  #if (USTEPS == 8)
+  #if (SK_USTEPS == 8)
     #define STEPS_E 188.3
-  #elif (USTEPS == 16)
+  #elif (SK_USTEPS == 16)
     #define STEPS_E 376.7
   #endif
 
@@ -830,29 +824,29 @@
 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { STEPS_X, STEPS_Y, STEPS_Z, STEPS_E }
 
-
-
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
+ *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#ifdef BOWDEN_EXTRUSION
-#define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 30, 200 }
-#else
 #define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 100 }
+
+//#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
+#if ENABLED(LIMITED_MAX_FR_EDITING)
+  #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } // ...or, set your own edit limits
 #endif
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
  * (Maximum start speed for accelerated moves)
  * Override with M201
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
+ *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#ifdef BOWDEN_EXTRUSION
-#define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 200, 2000 }
-#else
-#define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 200, 1500 }
+#define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 100, 2000 }
+
+//#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
+#if ENABLED(LIMITED_MAX_ACCEL_EDITING)
+  #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -866,12 +860,12 @@
 
 #ifdef BOWDEN_EXTRUSION
 #define DEFAULT_ACCELERATION          2000    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
+#define DEFAULT_RETRACT_ACCELERATION  1500    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration for travel (non printing) moves
 #else
 #define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_RETRACT_ACCELERATION  1500    // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   1500    // X, Y, Z acceleration for travel (non printing) moves
 #endif
 
 /**
@@ -882,12 +876,7 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-
-#ifdef BOWDEN_EXTRUSION
-  #define CLASSIC_JERK 
-#else
-#endif
-
+//#define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
   #ifdef BOWDEN_EXTRUSION
     #define DEFAULT_XJERK 10.0
@@ -1049,7 +1038,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1151,25 +1140,41 @@
 
 // @section machine
 
-// Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-  #define INVERT_X_DIR false
-  #define INVERT_Y_DIR false
-  #define INVERT_Z_DIR true
-#else // SK_GO
+#if SK_REVERSE_CABLE_SEQUENCE
+
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
-  #define INVERT_Z_DIR false
-#endif
+  
+  #if SK_Z_BELT_EXP
+    #define INVERT_Z_DIR true
+  #else
+    #define INVERT_Z_DIR false
+  #endif
 
-// @section extruder
+  #if (SK_MODEL % 2 == 0) // BMG
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
 
-// For direct drive extruder v9 set to true, for geared extruder set to false.
-#if (SK_MODEL % 2 == 0) // BMG
-#define INVERT_E0_DIR false
 #else
-#define INVERT_E0_DIR true
+
+  #define INVERT_X_DIR false
+  #define INVERT_Y_DIR false
+
+  #if SK_Z_BELT_EXP
+    #define INVERT_Z_DIR false
+  #else
+    #define INVERT_Z_DIR true
+  #endif
+
+  #if (SK_MODEL % 2 == 0) // BMG
+    #define INVERT_E0_DIR true
+  #else
+    #define INVERT_E0_DIR false
+  #endif
 #endif
+
 // #define INVERT_E1_DIR false
 
 #define INVERT_E2_DIR false
@@ -1196,22 +1201,30 @@
 
 // The size of the print bed
 #if (SK_MODEL <= SK_MINI_USING_TITAN)
-#define X_BED_SIZE  200
-#define Y_BED_SIZE  200
-#define Z_HEIGHT    200
+#define SK_X_BED_SIZE  200
+#define SK_Y_BED_SIZE  200
 #else
-#define X_BED_SIZE  320
-#define Y_BED_SIZE  330
-#define Z_HEIGHT    300
+#define SK_X_BED_SIZE  310
+#define SK_Y_BED_SIZE  310
 #endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
+#if (SK_MODEL <= SK_MINI_USING_TITAN)
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+#else
+  // Ernest: (0, 0) is the corner of bed.
+  //         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
+  //         and will be shwon in the display after homing.
+  //         This can be changed according to your assembly.
+  #define X_MIN_POS -5
+  #define Y_MIN_POS -20
+#endif
+
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS Z_HEIGHT
+#define X_MAX_POS SK_X_BED_SIZE
+#define Y_MAX_POS SK_Y_BED_SIZE
+#define Z_MAX_POS SK_Z_HEIGHT
 
 /**
  * Software Endstops
@@ -1265,11 +1278,7 @@
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
-#ifdef BOWDEN_EXTRUSION
-  #define FILAMENT_RUNOUT_DISTANCE_MM 50
-#else
-  #define FILAMENT_RUNOUT_DISTANCE_MM 500
-#endif
+  #define FILAMENT_RUNOUT_DISTANCE_MM   5
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
@@ -1318,8 +1327,8 @@
  *   With an LCD controller the process is guided step-by-step.
  */
 //#define AUTO_BED_LEVELING_3POINT
-// #define AUTO_BED_LEVELING_LINEAR
-// #define AUTO_BED_LEVELING_BILINEAR
+//#define AUTO_BED_LEVELING_LINEAR
+//#define AUTO_BED_LEVELING_BILINEAR
 #define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
@@ -1482,26 +1491,8 @@
 #endif
 
 // Homing speeds (mm/m)
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-
-  #ifdef BOWDEN_EXTRUSION
-  #define HOMING_FEEDRATE_XY (100*60)
-  #else
-  #define HOMING_FEEDRATE_XY (80*60)
-  #endif
-  #define HOMING_FEEDRATE_Z  (25*60)
-
-#else
-
-  #ifdef BOWDEN_EXTRUSION
-  #define HOMING_FEEDRATE_XY (100*60)
-  #else
-  #define HOMING_FEEDRATE_XY (100*60)
-  #endif
-  #define HOMING_FEEDRATE_Z  (30*60)
-
-#endif
-
+#define HOMING_FEEDRATE_XY (100*60)
+#define HOMING_FEEDRATE_Z  (30*60)
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
