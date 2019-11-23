@@ -2057,9 +2057,9 @@
    */
   #define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     70  // [mm/s]
+  #define X_HYBRID_THRESHOLD     100  // [mm/s]
   #define X2_HYBRID_THRESHOLD    120
-  #define Y_HYBRID_THRESHOLD     70
+  #define Y_HYBRID_THRESHOLD     100
   #define Y2_HYBRID_THRESHOLD    120
   #define Z_HYBRID_THRESHOLD      30
   #define Z2_HYBRID_THRESHOLD      3
@@ -2107,14 +2107,8 @@
   //#define SENSORLESS_PROBING // StallGuard capable drivers only
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
-    // TMC2209: 0...255. TMC2130: -64...63
-    #ifdef BOWDEN_EXTRUSION
-      #define X_STALL_SENSITIVITY  -1
-      #define Y_STALL_SENSITIVITY  -1
-    #else
-      #define X_STALL_SENSITIVITY  0
-      #define Y_STALL_SENSITIVITY  0
-    #endif
+      #define X_STALL_SENSITIVITY  140
+      #define Y_STALL_SENSITIVITY  140
     #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
     //#define Z_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130 only
