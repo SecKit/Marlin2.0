@@ -33,7 +33,7 @@
 #define SK_GO_USING_TITAN     3
 
 // Use one of the above defininition to change extruder setup
-#define SK_MODEL              SK_GO_USING_TITAN
+#define SK_MODEL              SK_GO_USING_BMG
 #define SK_Z_HEIGHT           300     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
@@ -41,6 +41,11 @@
 
 #define SK_REVERSE_CABLE_SEQUENCE  false
 #define SK_Z_BELT_EXP              false
+
+// invert polarity of Z endstop 
+// Lerge optical endstop: false. (HIGH is triggered as desc in spec)
+// Mechanical endstop: true
+#define SK_Z_ENDSTOP              false
 
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
@@ -698,7 +703,8 @@
 #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 
-#define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING SK_Z_ENDSTOP // Set to true to invert the logic of the endstop.
+
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
