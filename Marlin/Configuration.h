@@ -25,6 +25,7 @@
 // For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
+#define SK_DRIVER            TMC2209
 #define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
 #define SK_MINI_USING_BMG     0
@@ -41,6 +42,29 @@
 
 #define SK_REVERSE_CABLE_SEQUENCE  false
 #define SK_Z_BELT_EXP              false
+
+
+// Mechanical endstop    : true
+// Lerdge optical endstop: false
+#if (SK_DRIVER==TMC2209) 
+  #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #define SK_Z_ENDSTOP                true
+#elif (SK_DRIVER==TMC2130)
+  #define SK_X_ENDSTOP                true
+  #define SK_Y_ENDSTOP                true
+  #define SK_Z_ENDSTOP                true
+#else
+  #define SK_X_ENDSTOP                false
+  #define SK_Y_ENDSTOP                false
+  #define SK_Z_ENDSTOP                true
+#endif
+
+// (2019/11/24) 
+// SKR v1.3 doesn't work with Lerdge optical endstop.
+// The signal pin of Z endstop slot won't pull up while 
+// TMC2209 is inserted at Z driver slot.
+// Optical endstop works with TMC2130 and absense of TMC2209 at Z.
 
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
@@ -695,11 +719,9 @@
 #endif
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
-#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-
-#define Z_MIN_ENDSTOP_INVERTING true  // Ernest. mechanical endstop   : true
-// #define Z_MIN_ENDSTOP_INVERTING false // Ernest. Lerge optical endstop: false
+#define X_MIN_ENDSTOP_INVERTING SK_X_ENDSTOP // Set to true to invert the logic of the endstop.
+#define Y_MIN_ENDSTOP_INVERTING SK_Y_ENDSTOP // Set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING SK_Z_ENDSTOP 
 
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -721,14 +743,14 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#define X_DRIVER_TYPE  TMC2209
-#define Y_DRIVER_TYPE  TMC2209
-#define Z_DRIVER_TYPE  TMC2209
+#define X_DRIVER_TYPE  SK_DRIVER
+#define Y_DRIVER_TYPE  SK_DRIVER
+#define Z_DRIVER_TYPE  SK_DRIVER
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE TMC2209
+#define E0_DRIVER_TYPE SK_DRIVER
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
