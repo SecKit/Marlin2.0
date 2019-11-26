@@ -22,7 +22,7 @@
 #pragma once
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// BEGIN: For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
 #define SK_DRIVER            TMC2209
@@ -34,8 +34,8 @@
 #define SK_GO_USING_TITAN     3
 
 // Use one of the above defininition to change extruder setup
-#define SK_MODEL              SK_MINI_USING_TITAN
-#define SK_Z_HEIGHT           250     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
+#define SK_MODEL              SK_GO_USING_TITAN
+#define SK_Z_HEIGHT           300     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
@@ -43,22 +43,25 @@
 #define SK_REVERSE_CABLE_SEQUENCE  false
 #define SK_Z_BELT_EXP              false
 
-
+// 
+// Preprocessor of "#if SK_DRIVER == TMC2209" doesn't work
+// Search SK_DRIVER in files and comment out according sections
+// 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
-#if (SK_DRIVER==TMC2209) 
+// #if SK_DRIVER == TMC2209
   #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
-  #define SK_Z_ENDSTOP                true
-#elif (SK_DRIVER==TMC2130)
-  #define SK_X_ENDSTOP                true
-  #define SK_Y_ENDSTOP                true
-  #define SK_Z_ENDSTOP                true
-#else
-  #define SK_X_ENDSTOP                false
-  #define SK_Y_ENDSTOP                false
-  #define SK_Z_ENDSTOP                true
-#endif
+  #define SK_Z_ENDSTOP                true // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
+// #elif SK_DRIVER == TMC2130
+//   #define SK_X_ENDSTOP                true
+//   #define SK_Y_ENDSTOP                true
+//   #define SK_Z_ENDSTOP                true
+// #else
+//   #define SK_X_ENDSTOP                false
+//   #define SK_Y_ENDSTOP                false
+//   #define SK_Z_ENDSTOP                true
+// #endif
 
 // (2019/11/24) 
 // SKR v1.3 doesn't work with Lerdge optical endstop.
@@ -67,7 +70,7 @@
 // Optical endstop works with TMC2130 and absense of TMC2209 at Z.
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// END: For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
 

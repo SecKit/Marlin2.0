@@ -1965,7 +1965,13 @@
    * The default SW SPI pins are defined the respective pins files,
    * but you can override or define them here.
    */
-  // #define TMC_USE_SW_SPI
+  // #if SK_DRIVER == TMC2209
+    // do nothing
+  // #elif SK_DRIVER == TMC2130
+    // #define TMC_USE_SW_SPI
+  // #else
+  // #endif
+
   //#define TMC_SW_MOSI       -1
   //#define TMC_SW_MISO       -1
   //#define TMC_SW_SCK        -1
@@ -2107,8 +2113,16 @@
   //#define SENSORLESS_PROBING // StallGuard capable drivers only
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
-      #define X_STALL_SENSITIVITY  140
-      #define Y_STALL_SENSITIVITY  140
+
+    // #if (SK_DRIVER==TMC2209) 
+    //   #define X_STALL_SENSITIVITY  140
+    //   #define Y_STALL_SENSITIVITY  140
+    // #elif (SK_DRIVER==TMC2130)
+      #define X_STALL_SENSITIVITY  0
+      #define Y_STALL_SENSITIVITY  0
+    // #else
+    // #endif
+
     #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
     //#define Z_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130 only
