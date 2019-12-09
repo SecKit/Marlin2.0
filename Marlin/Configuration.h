@@ -34,7 +34,7 @@
 #define SK_GO_USING_TITAN     3
 
 // Use one of the above defininition to change extruder setup
-#define SK_MODEL              SK_GO_USING_TITAN
+#define SK_MODEL              SK_GO_USING_BMG
 #define SK_Z_HEIGHT           300     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
@@ -52,22 +52,19 @@
 // #if SK_DRIVER == TMC2209
   #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
-  #define SK_Z_ENDSTOP                true // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
+  #define SK_Z_ENDSTOP                true  // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
 // #elif SK_DRIVER == TMC2130
-//   #define SK_X_ENDSTOP                true
-//   #define SK_Y_ENDSTOP                true
-//   #define SK_Z_ENDSTOP                true
+  // #define SK_X_ENDSTOP                true
+  // #define SK_Y_ENDSTOP                true
+  // #define SK_Z_ENDSTOP                false
 // #else
 //   #define SK_X_ENDSTOP                false
 //   #define SK_Y_ENDSTOP                false
 //   #define SK_Z_ENDSTOP                true
 // #endif
 
-// (2019/11/24) 
-// SKR v1.3 doesn't work with Lerdge optical endstop.
-// The signal pin of Z endstop slot won't pull up while 
-// TMC2209 is inserted at Z driver slot.
-// Optical endstop works with TMC2130 and absense of TMC2209 at Z.
+// (2019/12/05) 
+// MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
 
 //----------------------------------------------------------
 // END: For SK-Go & SK-Mini 
@@ -817,7 +814,7 @@
   #define STEPS_X 100
   #define STEPS_Y 100
   #if SK_Z_BELT_EXP
-    #define STEPS_Z 2000
+    #define STEPS_Z 1600
   #else
     #define STEPS_Z 400
   #endif

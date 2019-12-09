@@ -2115,11 +2115,11 @@
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
 
     // #if (SK_DRIVER==TMC2209) 
-    //   #define X_STALL_SENSITIVITY  140
-    //   #define Y_STALL_SENSITIVITY  140
+      #define X_STALL_SENSITIVITY  140
+      #define Y_STALL_SENSITIVITY  140
     // #elif (SK_DRIVER==TMC2130)
-      #define X_STALL_SENSITIVITY  0
-      #define Y_STALL_SENSITIVITY  0
+      // #define X_STALL_SENSITIVITY  0
+      // #define Y_STALL_SENSITIVITY  0
     // #else
     // #endif
 
