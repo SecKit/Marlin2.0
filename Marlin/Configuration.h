@@ -25,7 +25,11 @@
 // BEGIN: For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
-#define SK_DRIVER            TMC2209
+// To use TMC2209 on SKR v1.3, the DIAG pin of TMC2209 at Z slot MUST be removed for endstop to work
+// due to PCB circuit design. Answered by BIGTREETECH.
+
+#define SK_DRIVER  2209     // 2209 or 2130
+
 #define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
 #define SK_MINI_USING_BMG     0
@@ -43,28 +47,23 @@
 #define SK_REVERSE_CABLE_SEQUENCE  false
 #define SK_Z_BELT_EXP              false
 
-// 
-// Preprocessor of "#if SK_DRIVER == TMC2209" doesn't work
-// Search SK_DRIVER in files and comment out according sections
-// 
+
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
-// #if SK_DRIVER == TMC2209
+#if (SK_DRIVER == 2209)
   #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Z_ENDSTOP                true  // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
-// #elif SK_DRIVER == TMC2130
-  // #define SK_X_ENDSTOP                true
-  // #define SK_Y_ENDSTOP                true
-  // #define SK_Z_ENDSTOP                false
-// #else
-//   #define SK_X_ENDSTOP                false
-//   #define SK_Y_ENDSTOP                false
-//   #define SK_Z_ENDSTOP                true
-// #endif
+#elif (SK_DRIVER == 2130)
+  #define SK_X_ENDSTOP                true  // use true for TMC2130 sensorless homing
+  #define SK_Y_ENDSTOP                true  // use true for TMC2130 sensorless homing
+  #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
+#else
+  #define SK_X_ENDSTOP                false
+  #define SK_Y_ENDSTOP                false
+  #define SK_Z_ENDSTOP                true
+#endif
 
-// (2019/12/05) 
-// MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
 
 //----------------------------------------------------------
 // END: For SK-Go & SK-Mini 
@@ -743,14 +742,27 @@
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
-#define X_DRIVER_TYPE  SK_DRIVER
-#define Y_DRIVER_TYPE  SK_DRIVER
-#define Z_DRIVER_TYPE  SK_DRIVER
+#if (SK_DRIVER == 2209)
+  #define X_DRIVER_TYPE  TMC2209
+  #define Y_DRIVER_TYPE  TMC2209
+  #define Z_DRIVER_TYPE  TMC2209
+  #define E0_DRIVER_TYPE TMC2130
+#elif (SK_DRIVER == 2130)
+  #define X_DRIVER_TYPE  TMC2130
+  #define Y_DRIVER_TYPE  TMC2130
+  #define Z_DRIVER_TYPE  TMC2130
+  #define E0_DRIVER_TYPE TMC2130
+#else
+  #define X_DRIVER_TYPE  A4988
+  #define Y_DRIVER_TYPE  A4988
+  #define Z_DRIVER_TYPE  A4988
+  #define E0_DRIVER_TYPE A4988
+#endif
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE SK_DRIVER
+//#define E0_DRIVER_TYPE A4988
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
