@@ -2118,8 +2118,8 @@
       #define X_STALL_SENSITIVITY  140
       #define Y_STALL_SENSITIVITY  140
     #elif (SK_DRIVER == 2130)
-      // #define X_STALL_SENSITIVITY  0
-      // #define Y_STALL_SENSITIVITY  0
+      #define X_STALL_SENSITIVITY  0
+      #define Y_STALL_SENSITIVITY  0
     #else
     #endif
 
