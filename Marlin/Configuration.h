@@ -53,7 +53,7 @@
 #if (SK_DRIVER == 2209)
   #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
-  #define SK_Z_ENDSTOP                true  // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
+  #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
 #elif (SK_DRIVER == 2130)
   #define SK_X_ENDSTOP                true  // use true for TMC2130 sensorless homing
   #define SK_Y_ENDSTOP                true  // use true for TMC2130 sensorless homing
@@ -746,7 +746,7 @@
   #define X_DRIVER_TYPE  TMC2209
   #define Y_DRIVER_TYPE  TMC2209
   #define Z_DRIVER_TYPE  TMC2209
-  #define E0_DRIVER_TYPE TMC2130
+  #define E0_DRIVER_TYPE TMC2209
 #elif (SK_DRIVER == 2130)
   #define X_DRIVER_TYPE  TMC2130
   #define Y_DRIVER_TYPE  TMC2130
@@ -1211,7 +1211,7 @@
   #endif
 #endif
 
-// #define INVERT_E1_DIR false
+#define INVERT_E1_DIR false
 
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
