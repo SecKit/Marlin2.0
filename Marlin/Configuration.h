@@ -28,7 +28,12 @@
 // To use TMC2209 on SKR v1.3, the DIAG pin of TMC2209 at Z slot MUST be removed for endstop to work
 // due to PCB circuit design. Answered by BIGTREETECH.
 
+
+// -----------------------------------
+// Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 #define SK_DRIVER  2209     // 2209 or 2130
+// Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
+// -----------------------------------
 
 #define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
@@ -458,7 +463,12 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
+#if (SK_MODEL % 2 == 0) // BMG
+#define TEMP_SENSOR_0 5
+#else
 #define TEMP_SENSOR_0 1
+#endif
+
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -1528,6 +1538,7 @@
 
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (60*60)
+//#define HOMING_FEEDRATE_XY (30*60)    // for 0.9 degree stepper
 #define HOMING_FEEDRATE_Z  (30*60)
 
 // Validate that endstops are triggered on homing moves
