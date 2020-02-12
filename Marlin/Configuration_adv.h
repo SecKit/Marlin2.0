@@ -2063,9 +2063,21 @@
    */
   #define HYBRID_THRESHOLD
 
+  #if (SK_DRIVER == 2209)
+  #define X_HYBRID_THRESHOLD     50  // 50 for 0.9 degree stepper
+  #else
   #define X_HYBRID_THRESHOLD     100  // [mm/s]
+  #endif
+
   #define X2_HYBRID_THRESHOLD    120
-  #define Y_HYBRID_THRESHOLD     100
+  // #define Y_HYBRID_THRESHOLD     100
+
+  #if (SK_DRIVER == 2209)
+  #define Y_HYBRID_THRESHOLD     50  // 50 for 0.9 degree stepper
+  #else
+  #define Y_HYBRID_THRESHOLD     100  // [mm/s]
+  #endif
+
   #define Y2_HYBRID_THRESHOLD    120
   #define Z_HYBRID_THRESHOLD      30
   #define Z2_HYBRID_THRESHOLD      3
@@ -2115,11 +2127,21 @@
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
 
     #if (SK_DRIVER == 2209) 
+      #if (SK_STEPPER == 9)
+      #define X_STALL_SENSITIVITY  180
+      #define Y_STALL_SENSITIVITY  180
+      #else
       #define X_STALL_SENSITIVITY  140
       #define Y_STALL_SENSITIVITY  140
+      #endif
     #elif (SK_DRIVER == 2130)
+      #if (SK_STEPPER == 9)
       #define X_STALL_SENSITIVITY  0
       #define Y_STALL_SENSITIVITY  0
+      #else
+      #define X_STALL_SENSITIVITY  0
+      #define Y_STALL_SENSITIVITY  0
+      #endif
     #else
     #endif
 

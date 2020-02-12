@@ -44,7 +44,9 @@
 
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_BMG
-#define SK_Z_HEIGHT           300     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
+#define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
+
+#define SK_STEPPER            18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
@@ -833,10 +835,17 @@
 
 #elif (SK_USTEPS == 16)
 
+  #if (SK_STEPPER == 9)
+  #define STEPS_X 200
+  #define STEPS_Y 200
+  #else
   #define STEPS_X 100
   #define STEPS_Y 100
+  #endif
+
+
   #if SK_Z_BELT_EXP
-    #define STEPS_Z 1600
+    #define STEPS_Z 3960
   #else
     #define STEPS_Z 400
   #endif
@@ -1537,8 +1546,12 @@
 #endif
 
 // Homing speeds (mm/m)
+#if (SK_DRIVER == 2209)
+#define HOMING_FEEDRATE_XY (30*60)
+#else
 #define HOMING_FEEDRATE_XY (60*60)
-//#define HOMING_FEEDRATE_XY (30*60)    // for 0.9 degree stepper
+#endif
+
 #define HOMING_FEEDRATE_Z  (30*60)
 
 // Validate that endstops are triggered on homing moves
