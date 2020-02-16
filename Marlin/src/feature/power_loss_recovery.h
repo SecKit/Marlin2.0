@@ -148,14 +148,16 @@ class PrintJobRecovery {
     static void enable(const bool onoff);
     static void changed();
 
-    static void check();
-    static void resume();
-
     static inline bool exists() { return card.jobRecoverFileExists(); }
     static inline void open(const bool read) { card.openJobRecoveryFile(read); }
     static inline void close() { file.close(); }
 
+    static void check();
+    static void resume();
     static void purge();
+
+    static inline void cancel() { purge(); card.autostart_index = 0; }
+
     static void load();
     static void save(const bool force=
       #if ENABLED(SAVE_EACH_CMD_MODE)
@@ -168,7 +170,7 @@ class PrintJobRecovery {
 
   #if PIN_EXISTS(POWER_LOSS)
     static inline void outage() {
-      if (enabled && IS_SD_PRINTING() && READ(POWER_LOSS_PIN) == POWER_LOSS_STATE)
+      if (enabled && READ(POWER_LOSS_PIN) == POWER_LOSS_STATE)
         _outage();
     }
   #endif
@@ -183,6 +185,10 @@ class PrintJobRecovery {
 
   private:
     static void write();
+
+  #if ENABLED(BACKUP_POWER_SUPPLY)
+    static void raise_z();
+  #endif
 
   #if PIN_EXISTS(POWER_LOSS)
     static void _outage();

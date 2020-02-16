@@ -34,6 +34,8 @@
   #undef TEMP_SENSOR_3
   #undef TEMP_SENSOR_4
   #undef TEMP_SENSOR_5
+  #undef TEMP_SENSOR_6
+  #undef TEMP_SENSOR_7
   #undef FWRETRACT
   #undef PIDTEMP
   #undef AUTOTEMP
@@ -52,6 +54,11 @@
   #undef THERMAL_PROTECTION_PERIOD
   #undef WATCH_TEMP_PERIOD
   #undef SHOW_TEMP_ADC_VALUES
+#endif
+
+// Multiple Z steppers
+#ifndef NUM_Z_STEPPER_DRIVERS
+  #define NUM_Z_STEPPER_DRIVERS 1
 #endif
 
 #define HAS_CUTTER EITHER(SPINDLE_FEATURE, LASER_FEATURE)
@@ -129,9 +136,14 @@
 #endif
 
 // Extensible UI pin mapping for RepRapDiscount
-#define TOUCH_UI_ULTIPANEL ENABLED(LULZBOT_TOUCH_UI) && ANY(AO_EXP1_PINMAP, AO_EXP2_PINMAP, CR10_TFT_PINMAP)
+#define TOUCH_UI_ULTIPANEL ENABLED(TOUCH_UI_FTDI_EVE) && ANY(AO_EXP1_PINMAP, AO_EXP2_PINMAP, CR10_TFT_PINMAP)
 
 // Poll-based jogging for joystick and other devices
 #if ENABLED(JOYSTICK)
   #define POLL_JOG
+#endif
+
+// G60/G61 Position Save
+#if SAVED_POSITIONS > 256
+  #error "SAVED_POSITIONS must be an integer from 0 to 256."
 #endif

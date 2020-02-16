@@ -36,8 +36,14 @@ namespace Language_vi {
 
   PROGMEM Language_Str WELCOME_MSG                         = MACHINE_NAME _UxGT(" Sẵn sàng.");              // Ready
   PROGMEM Language_Str MSG_BACK                            = _UxGT("Trở lại");                              // Back
-  PROGMEM Language_Str MSG_SD_INSERTED                     = _UxGT("Thẻ được cắm vào");                     // Card inserted
-  PROGMEM Language_Str MSG_SD_REMOVED                      = _UxGT("Thẻ được rút ra");
+  PROGMEM Language_Str MSG_MEDIA_ABORTING                  = _UxGT("Đang hủy bỏ...");
+  PROGMEM Language_Str MSG_MEDIA_INSERTED                  = _UxGT("Phương tiện được cắm vào");             // Media inserted
+  PROGMEM Language_Str MSG_MEDIA_REMOVED                   = _UxGT("Phương tiện được rút ra");
+  PROGMEM Language_Str MSG_MEDIA_RELEASED                  = _UxGT("Phương tiện đã phát hành");
+  PROGMEM Language_Str MSG_MEDIA_WAITING                   = _UxGT("Chờ đợi phương tiện");
+  PROGMEM Language_Str MSG_MEDIA_READ_ERROR                = _UxGT("Lỗi đọc phương tiện");
+  PROGMEM Language_Str MSG_MEDIA_USB_REMOVED               = _UxGT("USB được rút ra");
+  PROGMEM Language_Str MSG_MEDIA_USB_FAILED                = _UxGT("USB khởi thất bại");
   PROGMEM Language_Str MSG_LCD_ENDSTOPS                    = _UxGT("Công tắc");                             // Endstops - công tắc hành trình
   PROGMEM Language_Str MSG_LCD_SOFT_ENDSTOPS               = _UxGT("Công tắc mềm");                         // soft Endstops
   PROGMEM Language_Str MSG_MAIN                            = _UxGT("Chính");                                // Main
@@ -204,9 +210,9 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_NOZZLE_N                        = _UxGT("Đầu phun ~");                           // Nozzle
   PROGMEM Language_Str MSG_BED                             = _UxGT("Bàn");                                  // bed
   PROGMEM Language_Str MSG_FAN_SPEED                       = _UxGT("Tốc độ quạt");                          // fan speed
-  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("Tốc độ quạt =");                        // fan speed
+  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("Tốc độ quạt ~");                        // fan speed
   PROGMEM Language_Str MSG_EXTRA_FAN_SPEED                 = _UxGT("Tốc độ quạt phụ");                      // Extra fan speed
-  PROGMEM Language_Str MSG_EXTRA_FAN_SPEED_N               = _UxGT("Tốc độ quạt phụ =");                    // Extra fan speed
+  PROGMEM Language_Str MSG_EXTRA_FAN_SPEED_N               = _UxGT("Tốc độ quạt phụ ~");                    // Extra fan speed
   PROGMEM Language_Str MSG_FLOW                            = _UxGT("Lưu Lượng");
   PROGMEM Language_Str MSG_FLOW_N                          = _UxGT("Lưu Lượng ~");
   PROGMEM Language_Str MSG_CONTROL                         = _UxGT("Điều khiển");                           // Control
@@ -216,14 +222,6 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_AUTOTEMP                        = _UxGT("Nhiệt độ tự động");                     // Autotemp
   PROGMEM Language_Str MSG_LCD_ON                          = _UxGT("Bật");                                  // on
   PROGMEM Language_Str MSG_LCD_OFF                         = _UxGT("Tắt");                                  // off
-  PROGMEM Language_Str MSG_PID_P                           = _UxGT("PID-P");
-  PROGMEM Language_Str MSG_PID_P_E                         = _UxGT("PID-P *");
-  PROGMEM Language_Str MSG_PID_I                           = _UxGT("PID-I");
-  PROGMEM Language_Str MSG_PID_I_E                         = _UxGT("PID-I *");
-  PROGMEM Language_Str MSG_PID_D                           = _UxGT("PID-D");
-  PROGMEM Language_Str MSG_PID_D_E                         = _UxGT("PID-D *");
-  PROGMEM Language_Str MSG_PID_C                           = _UxGT("PID-C");
-  PROGMEM Language_Str MSG_PID_C_E                         = _UxGT("PID-C *");
   PROGMEM Language_Str MSG_SELECT                          = _UxGT("Lựa");                                  // Select
   PROGMEM Language_Str MSG_SELECT_E                        = _UxGT("Lựa *");
   PROGMEM Language_Str MSG_ACC                             = _UxGT("Tăng Tốc");
@@ -270,18 +268,18 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_LOAD_EEPROM                     = _UxGT("Tải các cài đặt");                      // Load settings
   PROGMEM Language_Str MSG_RESTORE_FAILSAFE                = _UxGT("Khôi phục phòng hư");                   // Restore failsafe
   PROGMEM Language_Str MSG_INIT_EEPROM                     = _UxGT("Khởi Tạo EEPROM");                      // Initialize EEPROM
-  PROGMEM Language_Str MSG_SD_UPDATE                       = _UxGT("Cập Nhật SD");                          // SD Update
+  PROGMEM Language_Str MSG_MEDIA_UPDATE                    = _UxGT("Cập Nhật phương tiện");                 // Update media
   PROGMEM Language_Str MSG_RESET_PRINTER                   = _UxGT("Bặt Lại Máy In");
-  PROGMEM Language_Str MSG_REFRESH                         = LCD_STR_REFRESH  _UxGT("Cập Nhật");                             // Refresh
-  PROGMEM Language_Str MSG_WATCH                           = _UxGT("Màn Hình Thông Tin");                   // Info screen
+  PROGMEM Language_Str MSG_REFRESH                         = LCD_STR_REFRESH  _UxGT("Cập Nhật");            // Refresh
+  PROGMEM Language_Str MSG_INFO_SCREEN                     = _UxGT("Màn Hình Thông Tin");                   // Info screen
   PROGMEM Language_Str MSG_PREPARE                         = _UxGT("Chuẩn bị");                             // Prepare
   PROGMEM Language_Str MSG_TUNE                            = _UxGT("Điều Chỉnh");                           // Tune
   PROGMEM Language_Str MSG_PAUSE_PRINT                     = _UxGT("Tạm dừng in");                          // Pause print
   PROGMEM Language_Str MSG_RESUME_PRINT                    = _UxGT("Tiếp tục in");                          // Resume print
   PROGMEM Language_Str MSG_STOP_PRINT                      = _UxGT("Ngừng in");                             // Stop print
   PROGMEM Language_Str MSG_OUTAGE_RECOVERY                 = _UxGT("Phục Hồi Mất Điện");                    // Outage Recovery
-  PROGMEM Language_Str MSG_CARD_MENU                       = _UxGT("In từ SD");                             // Print from SD
-  PROGMEM Language_Str MSG_NO_CARD                         = _UxGT("Không có thẻ SD");                      // No SD card
+  PROGMEM Language_Str MSG_MEDIA_MENU                      = _UxGT("In từ phương tiện");                    // Print from media
+  PROGMEM Language_Str MSG_NO_MEDIA                        = _UxGT("Không có phương tiện");                 // No media
   PROGMEM Language_Str MSG_DWELL                           = _UxGT("Ngủ...");                               // Sleep
   PROGMEM Language_Str MSG_USERWAIT                        = _UxGT("Nhấn để tiếp tục...");                  // Click to resume (same as 'continue')
   PROGMEM Language_Str MSG_PRINT_PAUSED                    = _UxGT("In tạm dừng");                          // print paused
@@ -311,8 +309,9 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_FILAMENTUNLOAD                  = _UxGT("Dỡ dây nhựa");                          // unload filament
   PROGMEM Language_Str MSG_FILAMENTUNLOAD_E                = _UxGT("Dỡ dây nhựa *");                        // unload filament
   PROGMEM Language_Str MSG_FILAMENTUNLOAD_ALL              = _UxGT("Dỡ tất cả");                            // Unload All
-  PROGMEM Language_Str MSG_INIT_SDCARD                     = _UxGT("Khởi tạo thẻ SD ");                     // Init. SD card
-  PROGMEM Language_Str MSG_CHANGE_SDCARD                   = _UxGT("Thay thẻ SD");                          // Change SD card
+  PROGMEM Language_Str MSG_INIT_MEDIA                      = _UxGT("Khởi tạo phương tiện");                 // Init. media
+  PROGMEM Language_Str MSG_CHANGE_MEDIA                    = _UxGT("Thay phương tiện");                     // Change midea
+  PROGMEM Language_Str MSG_RELEASE_MEDIA                   = _UxGT("Phát hành phương tiện");
   PROGMEM Language_Str MSG_ZPROBE_OUT                      = _UxGT("Đầu Dò Z qua bàn");                     // Z Probe past bed
   PROGMEM Language_Str MSG_SKEW_FACTOR                     = _UxGT("Hệ số nghiêng");                        // Skew Factor
   PROGMEM Language_Str MSG_BLTOUCH                         = _UxGT("BLTOUCH");                              // BLTouch
@@ -391,7 +390,10 @@ namespace Language_vi {
   PROGMEM Language_Str MSG_INFO_MAX_TEMP                   = _UxGT("Nhiệt độ tối đa");                      // Max temp
   PROGMEM Language_Str MSG_INFO_PSU                        = _UxGT("Bộ nguồn");                             // PSU
   PROGMEM Language_Str MSG_DRIVE_STRENGTH                  = _UxGT("Sức mạnh ổ đĩa");                       // Drive Strength
-  PROGMEM Language_Str MSG_DAC_PERCENT                     = _UxGT("% trình điều khiển");                   // Driver %
+  PROGMEM Language_Str MSG_DAC_PERCENT_X                   = _UxGT("X % trình điều khiển");                 // X Driver %
+  PROGMEM Language_Str MSG_DAC_PERCENT_Y                   = _UxGT("Y % trình điều khiển");                 // Y Driver %
+  PROGMEM Language_Str MSG_DAC_PERCENT_Z                   = _UxGT("Z % trình điều khiển");                 // Z Driver %
+  PROGMEM Language_Str MSG_DAC_PERCENT_E                   = _UxGT("E % trình điều khiển");                 // E Driver %
   PROGMEM Language_Str MSG_DAC_EEPROM_WRITE                = _UxGT("Ghi DAC EEPROM");                       // DAC EEPROM Write
   PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEADER_PAUSE    = _UxGT("In tạm dừng");                          // PRINT PAUSED
   PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEADER_LOAD     = _UxGT("Nạp dây nhựa");

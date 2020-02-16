@@ -20,12 +20,14 @@
  *
  */
 
-#include "../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfigPre.h"
 
 #if HAS_RESUME_CONTINUE
 
 #include "../gcode.h"
-#include "../../module/stepper.h"
+#include "../../module/planner.h"
+
+#include "../../inc/MarlinConfig.h"
 
 #if HAS_LCD_MENU
   #include "../../lcd/ultralcd.h"
@@ -34,8 +36,6 @@
 #if ENABLED(EXTENSIBLE_UI)
   #include "../../lcd/extensible_ui/ui_api.h"
 #endif
-
-#include "../../sd/cardreader.h"
 
 #if HAS_LEDS_OFF_FLAG
   #include "../../feature/leds/printer_event_leds.h"
@@ -98,10 +98,7 @@ void GcodeSuite::M0_M1() {
   wait_for_user = true;
 
   #if ENABLED(HOST_PROMPT_SUPPORT)
-    host_prompt_do(PROMPT_USER_CONTINUE, PSTR("M0/1 Break Called"), PSTR("Continue"));
-  #endif
-  #if ENABLED(EXTENSIBLE_UI)
-    ExtUI::onUserConfirmRequired_P(PSTR("M0/1 Break Called"));
+    host_prompt_do(PROMPT_USER_CONTINUE, PSTR("M0/1 Break Called"), CONTINUE_STR);
   #endif
 
   if (ms > 0) {

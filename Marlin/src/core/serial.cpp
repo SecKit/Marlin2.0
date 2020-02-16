@@ -29,7 +29,7 @@ static const char errormagic[] PROGMEM = "Error:";
 static const char echomagic[]  PROGMEM = "echo:";
 
 #if NUM_SERIAL > 1
-  int8_t serial_port_index = SERIAL_PORT;
+  int8_t serial_port_index = 0;
 #endif
 
 void serialprintPGM(PGM_P str) {
@@ -58,17 +58,17 @@ void serialprint_onoff(const bool onoff) { serialprintPGM(onoff ? PSTR(MSG_ON) :
 void serialprintln_onoff(const bool onoff) { serialprint_onoff(onoff); SERIAL_EOL(); }
 void serialprint_truefalse(const bool tf) { serialprintPGM(tf ? PSTR("true") : PSTR("false")); }
 
-void print_bin(const uint16_t val) {
-  uint16_t mask = 0x8000;
+void print_bin(uint16_t val) {
   for (uint8_t i = 16; i--;) {
-    if (i && !(i % 4)) SERIAL_CHAR(' ');
-    SERIAL_CHAR((val & mask) ? '1' : '0');
-    mask >>= 1;
+    SERIAL_CHAR('0' + TEST(val, i));
+    if (!(i & 0x3) && i) SERIAL_CHAR(' ');
   }
 }
 
+extern const char SP_X_STR[], SP_Y_STR[], SP_Z_STR[];
+
 void print_xyz(const float &x, const float &y, const float &z, PGM_P const prefix/*=nullptr*/, PGM_P const suffix/*=nullptr*/) {
   serialprintPGM(prefix);
-  SERIAL_ECHOPAIR(" " MSG_X, x, " " MSG_Y, y, " " MSG_Z, z);
+  SERIAL_ECHOPAIR_P(SP_X_STR, x, SP_Y_STR, y, SP_Z_STR, z);
   if (suffix) serialprintPGM(suffix); else SERIAL_EOL();
 }
