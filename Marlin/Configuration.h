@@ -26,8 +26,8 @@
 #define SK_MINI_USING_TITAN   1   // Constants for later usage. Don't modify it.
 #define SK_GO_USING_BMG       2   // Constants for later usage. Don't modify it.
 #define SK_GO_USING_TITAN     3   // Constants for later usage. Don't modify it.
-#define SK_GON_USING_BMG      2   // Constants for later usage. Don't modify it.
-#define SK_GON_USING_TITAN    3   // Constants for later usage. Don't modify it.
+#define SK_GO2_USING_BMG      2   // Constants for later usage. Don't modify it.
+#define SK_GO2_USING_TITAN    3   // Constants for later usage. Don't modify it.
 
 //----------------------------------------------------------
 // BEGIN: For SK-Go & SK-Mini
