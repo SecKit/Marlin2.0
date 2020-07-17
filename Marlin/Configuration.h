@@ -64,7 +64,7 @@
 #endif
 
 // #define BOWDEN_EXTRUSION                 // Comment it for direct extrusion. Uncomment for bowden setup.
-#define SK_BELTED_Z_EXP             false   // set true for settings for belt-z experiment
+#define SK_BELTED_Z             false       // set true for settings for Belt-Z
 
 //----------------------------------------------------------
 // END: For SK-Go & SK-Mini 
@@ -853,8 +853,8 @@
   #endif
 
 
-  #if SK_BELTED_Z_EXP
-    #define STEPS_Z 3960
+  #if SK_BELTED_Z
+    #define STEPS_Z 3200
   #else
     #define STEPS_Z 400
   #endif
@@ -893,7 +893,13 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 100 }
+#if SK_BELTED_Z
+  #define SK_MAX_FEEDRATE_Z   8       // The planar gearbox comes with low speed and high torque
+#else
+  #define SK_MAX_FEEDRATE_Z   30
+#endif
+
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_BELTED_Z, 100 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1217,7 +1223,7 @@
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
   
-  #if SK_BELTED_Z_EXP
+  #if SK_BELTED_Z
     #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR false
@@ -1234,7 +1240,7 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR false
 
-  #if SK_BELTED_Z_EXP
+  #if SK_BELTED_Z
     #define INVERT_Z_DIR false
   #else
     #define INVERT_Z_DIR true
@@ -1571,8 +1577,8 @@
 #define HOMING_FEEDRATE_XY (60*60)
 #endif
 
-#if SK_BELTED_Z_EXP
-#define HOMING_FEEDRATE_Z  (3*60)
+#if SK_BELTED_Z
+#define HOMING_FEEDRATE_Z  (8*60)
 #else
 #define HOMING_FEEDRATE_Z  (15*60)
 #endif
