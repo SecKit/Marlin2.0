@@ -899,7 +899,7 @@
   #define SK_MAX_FEEDRATE_Z   30
 #endif
 
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_BELTED_Z, 100 }
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_MAX_FEEDRATE_Z, 100 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
