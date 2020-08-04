@@ -39,7 +39,7 @@
 // Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 #define SK_DRIVER     2209              // 2209 or 2130
 
-#define SK_MODEL      SK_GO_USING_BMG   // Use one of the above defininition to change extruder setup
+#define SK_MODEL      SK_GO2_USING_BMG   // Use one of the above defininition to change extruder setup
 #define SK_Z_HEIGHT   350               // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 #define SK_STEPPER    18                // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
@@ -47,24 +47,36 @@
 
 #define SK_USTEPS     16                // microsteps used in firmware. TMC drivers will interpolate to 256.
 
+// #define BOWDEN_EXTRUSION                // Comment it for direct extrusion. Uncomment for bowden setup.
+#define SK_BELTED_Z   false             // set true for settings for Belt-Z
+#define SK_USE_S42B   false
+
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
 #if (SK_DRIVER == 2209)
-  #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
-  #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #if SK_USE_S42B
+    #define SK_X_ENDSTOP                false
+    #define SK_Y_ENDSTOP                false
+  #else
+    #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
+    #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #endif
+
   #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
 #elif (SK_DRIVER == 2130)
-  #define SK_X_ENDSTOP                true  // use true for TMC2130 sensorless homing
-  #define SK_Y_ENDSTOP                true  // use true for TMC2130 sensorless homing
+  #if SK_USE_S42B
+    #define SK_X_ENDSTOP                false
+    #define SK_Y_ENDSTOP                false
+  #else
+    #define SK_X_ENDSTOP                true  // use true for TMC2130 sensorless homing
+    #define SK_Y_ENDSTOP                true  // use true for TMC2130 sensorless homing
+  #endif
   #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
 #else
   #define SK_X_ENDSTOP                false
   #define SK_Y_ENDSTOP                false
   #define SK_Z_ENDSTOP                true
 #endif
-
-// #define BOWDEN_EXTRUSION                 // Comment it for direct extrusion. Uncomment for bowden setup.
-#define SK_BELTED_Z             false       // set true for settings for Belt-Z
 
 //----------------------------------------------------------
 // END: For SK-Go & SK-Mini 
@@ -189,7 +201,7 @@
 #if (SK_MODEL <= SK_MINI_USING_TITAN)
   #define CUSTOM_MACHINE_NAME "SK-Mini"
 #else
-  #define CUSTOM_MACHINE_NAME "SK-Go"
+  #define CUSTOM_MACHINE_NAME "SK-Go²"
 #endif
 
 // Printer's unique ID, used by some programs to differentiate between machines.
@@ -761,13 +773,22 @@
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'L6474', 'POWERSTEP01', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 #if (SK_DRIVER == 2209)
-  #define X_DRIVER_TYPE  TMC2209
-  #define Y_DRIVER_TYPE  TMC2209
+  #if SK_USE_S42B
+    // no definitions for BigTreeTech S42B needed. S42B comes with its driver on-board.
+  #else
+    #define X_DRIVER_TYPE  TMC2209
+    #define Y_DRIVER_TYPE  TMC2209
+  #endif
+
   #define Z_DRIVER_TYPE  TMC2209
   #define E0_DRIVER_TYPE TMC2209
 #elif (SK_DRIVER == 2130)
-  #define X_DRIVER_TYPE  TMC2130
-  #define Y_DRIVER_TYPE  TMC2130
+  #if SK_USE_S42B
+    // no definitions for BigTreeTech S42B needed. S42B comes with its driver on-board.
+  #else
+    #define X_DRIVER_TYPE  TMC2130
+    #define Y_DRIVER_TYPE  TMC2130
+  #endif
   #define Z_DRIVER_TYPE  TMC2130
   #define E0_DRIVER_TYPE TMC2130
 #else
@@ -845,16 +866,21 @@
 #elif (SK_USTEPS == 16)
 
   #if (SK_STEPPER == 9)
-  #define STEPS_X 200
-  #define STEPS_Y 200
+      #define STEPS_X 200
+      #define STEPS_Y 200
   #else
-  #define STEPS_X 100
-  #define STEPS_Y 100
+    #if SK_USE_S42B
+      #define STEPS_X 204.8
+      #define STEPS_Y 204.8
+    #else
+      #define STEPS_X 100
+      #define STEPS_Y 100
+    #endif
   #endif
 
 
   #if SK_BELTED_Z
-    #define STEPS_Z 3200
+    #define STEPS_Z 2560
   #else
     #define STEPS_Z 400
   #endif
@@ -894,7 +920,7 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 #if SK_BELTED_Z
-  #define SK_MAX_FEEDRATE_Z   8       // The planar gearbox comes with low speed and high torque
+  #define SK_MAX_FEEDRATE_Z   7.5       // The planar gearbox comes with low speed and high torque
 #else
   #define SK_MAX_FEEDRATE_Z   30
 #endif
@@ -1578,7 +1604,7 @@
 #endif
 
 #if SK_BELTED_Z
-#define HOMING_FEEDRATE_Z  (8*60)
+#define HOMING_FEEDRATE_Z  (450)   // 7.5 mm/s * 60 s/min
 #else
 #define HOMING_FEEDRATE_Z  (15*60)
 #endif

@@ -2315,7 +2315,12 @@
    * IMPROVE_HOMING_RELIABILITY tunes acceleration and jerk when
    * homing and adds a guard period for endstop triggering.
    */
-   #define SENSORLESS_HOMING // StallGuard capable drivers only
+  // servo exp
+  #if SK_USE_S42B
+    // with S42b, physical endstop is a must.
+  #else
+    #define SENSORLESS_HOMING // StallGuard capable drivers only
+  #endif
 
   /**
    * Use StallGuard2 to probe the bed with the nozzle.
