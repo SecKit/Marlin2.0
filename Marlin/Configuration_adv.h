@@ -590,10 +590,14 @@
 //#define HOMING_BACKOFF_MM { 2, 2, 2 }  // (mm) Move away from the endstops after homing
 
 // When G28 is called, this option will make Y home before X
-//#define HOME_Y_BEFORE_X
+#if SK_YX_HOMING_ENDSTOPS
+  #define HOME_Y_BEFORE_X
+#endif
 
 // Enable this if X or Y can't home without homing the other axis first.
-//#define CODEPENDENT_XY_HOMING
+#if SK_YX_HOMING_ENDSTOPS
+  #define CODEPENDENT_XY_HOMING
+#endif
 
 #if ENABLED(BLTOUCH)
   /**
@@ -2319,7 +2323,11 @@
   #if SK_USE_S42B
     // with S42b, physical endstop is a must.
   #else
-    #define SENSORLESS_HOMING // StallGuard capable drivers only
+    #if SK_YX_HOMING_ENDSTOPS
+      // Disable TMC sensorless homing and use optical endstops.
+    #else
+      #define SENSORLESS_HOMING // StallGuard capable drivers only
+    #endif
   #endif
 
   /**

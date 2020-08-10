@@ -37,19 +37,20 @@
 // Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 // Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 // Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
-#define SK_DRIVER     2209              // 2209 or 2130
+#define SK_DRIVER     2209                // 2209 or 2130
 
-#define SK_MODEL      SK_GO2_USING_BMG   // Use one of the above defininition to change extruder setup
-#define SK_Z_HEIGHT   350               // SK-Mini: 250 or 300. SK-Go: 300 or 350.
-#define SK_STEPPER    18                // 18 for 1.8 degree, 9 for 0.9 degree stepper
+#define SK_MODEL      SK_GO_USING_BMG     // Use one of the above defininition to change extruder setup
+#define SK_Z_HEIGHT   350                 // SK-Mini: 250 or 300. SK-Go: 300 or 350.
+#define SK_STEPPER    18                  // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
 #define SK_REVERSE_CABLE_SEQUENCE       false   // if steppers turn reversely, either set this definition or change cable sequence
 
-#define SK_USTEPS     16                // microsteps used in firmware. TMC drivers will interpolate to 256.
+#define SK_USTEPS     16                  // microsteps used in firmware. TMC drivers will interpolate to 256.
 
-// #define BOWDEN_EXTRUSION                // Comment it for direct extrusion. Uncomment for bowden setup.
-#define SK_BELTED_Z   false             // set true for settings for Belt-Z
-#define SK_USE_S42B   false
+// #define BOWDEN_EXTRUSION               // Comment it for direct extrusion. Uncomment for bowden setup.
+#define SK_BELTED_Z           false       // set true for settings for Belt-Z
+#define SK_USE_S42B           false       // BTT Servo S42B
+#define SK_YX_HOMING_ENDSTOPS false       // Home to Y Max first, then to X min.
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
@@ -714,10 +715,14 @@
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
-#define USE_YMIN_PLUG
+#if !SK_YX_HOMING_ENDSTOPS
+  #define USE_YMIN_PLUG
+#endif
 #define USE_ZMIN_PLUG
 //#define USE_XMAX_PLUG
-//#define USE_YMAX_PLUG
+#if SK_YX_HOMING_ENDSTOPS
+  #define USE_YMAX_PLUG
+#endif
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
@@ -1267,7 +1272,7 @@
   #define INVERT_Y_DIR false
 
   #if SK_BELTED_Z
-    #define INVERT_Z_DIR false
+    #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR true
   #endif
@@ -1300,7 +1305,11 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
-#define Y_HOME_DIR -1
+#if SK_YX_HOMING_ENDSTOPS
+  #define Y_HOME_DIR 1
+#else
+  #define Y_HOME_DIR -1
+#endif
 #define Z_HOME_DIR -1
 
 // @section machine
