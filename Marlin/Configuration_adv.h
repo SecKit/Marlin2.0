@@ -1840,11 +1840,7 @@
   //   For Bowden, the full length of the tube and nozzle.
   //   For direct drive, the full length of the nozzle.
   //   Set to 0 for manual unloading.
-#ifdef BOWDEN_EXTRUSION
-  #define FILAMENT_CHANGE_UNLOAD_LENGTH      695
-#else
   #define FILAMENT_CHANGE_UNLOAD_LENGTH      100
-#endif
 
   #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   10  // (mm/s) Slow move when starting load.
   // #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   4  // for SK-Swift. (mm/s) Slow move when starting load.
@@ -1856,11 +1852,7 @@
   // (mm) Load length of filament, from extruder gear to nozzle.
   //   For Bowden, the full length of the tube and nozzle.
   //   For direct drive, the full length of the nozzle.
-#ifdef BOWDEN_EXTRUSION
-  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     695
-#else
   #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     50  // (mm) Load length of filament, from extruder gear to nozzle.
-#endif
 
   //#define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        3  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
